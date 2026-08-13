@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model ParentProfile {
+  id        String                    @id @default(uuid())
+  firstName String
+  city      String
+  state     String?
+  instagram String?
+  createdAt DateTime                  @default(now())
+  updatedAt DateTime                  @updatedAt
+  groups    ParentGroupMembership[]
+  stages    ParentProfileChildStage[]
+  needs     ParentProfileNeed[]
+  privacy   PrivacySettings?
+}
+
+model PrivacySettings {
+  id               String        @id @default(uuid())
+  parentProfileId  String        @unique
+  isNeedsPublic    Boolean       @default(true)
+  isChildStagePublic Boolean     @default(true)
+  isGroupsPublic   Boolean       @default(true)
+  parentProfile    ParentProfile @relation(fields: [parentProfileId], references: [id])
+}
+
+model FamilyNeed {
+  id      String              @id @default(uuid())
+  code    String              @unique
+  label   String
+  parents ParentProfileNeed[]
+}
+
+model ParentProfileNeed {
+  parentProfileId String
+  familyNeedId    String
+  familyNeed      FamilyNeed    @relation(fields: [familyNeedId], references: [id])
+  parentProfile   ParentProfile @relation(fields: [parentProfileId], references: [id])
+
+  @@id([parentProfileId, familyNeedId])
+}
+
+model ChildStage {
+  id     String                    @id @default(uuid())
+  code   String                    @unique
+  label  String
+  sortOrder Int
+
+  parent ParentProfileChildStage[]
+}
+
+model ParentProfileChildStage {
+  parentProfileId String
+  childStageId    String
+  childStage      ChildStage    @relation(fields: [childStageId], references: [id])
+  parentProfile   ParentProfile @relation(fields: [parentProfileId], references: [id])
+
+  @@id([parentProfileId, childStageId])
+}
+
+model CommunityGroup {
+  id          String                  @id @default(uuid())
+  name        String
+  city        String
+  state       String
+  website     String
+  description String?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  member      ParentGroupMembership[]
+}
+
+model ParentGroupMembership {
+  parentProfileId  String
+  communityGroupId String
+  communityGroup   CommunityGroup @relation(fields: [communityGroupId], references: [id])
+  parentProfile    ParentProfile  @relation(fields: [parentProfileId], references: [id])
+
+  @@id([parentProfileId, communityGroupId])
+}
