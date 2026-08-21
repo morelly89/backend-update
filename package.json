@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.2.0",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.5",
@@ -37,6 +38,7 @@
     "express-rate-limit": "^8.6.2",
     "jsonwebtoken": "^9.0.3",
     "prisma": "^7.9.1",
+    "resend": "^6.21.0",
     "zod": "^4.4.3"
   }
 }

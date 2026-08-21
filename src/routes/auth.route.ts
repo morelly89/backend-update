@@ -9,5 +9,6 @@ const controller = new AuthController();
 
 router.post("/register", authRateLimiter, validateMiddleware(userRegisterSchema), controller.register);
 router.post("/login", authRateLimiter, validateMiddleware(userLoginSchema), controller.login);
+router.get("/verify-email", controller.verifyEmail);
 
 export default router;
